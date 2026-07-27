@@ -1,0 +1,238 @@
+<div class="admin-layout">
+  <!-- BARRA LATERAL (SIDEBAR) -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🏥</div>
+    </div>
+    <div class="menu-label">MENÚ</div>
+    <ul class="sidebar-nav">
+      @if (modo() !== 'menu' && modo() !== 'login' && modo() !== 'registrar') {
+        <li (click)="cambiarModo('dashboard')">🏠 Inicio</li>
+        <li (click)="cambiarModo('agendar')">📅 Agendar Cita</li>
+        <li (click)="cargarCitas()">📋 Ver Mis Citas</li>
+      } @else {
+        <li class="active">👋 Bienvenido</li>
+      }
+    </ul>
+    <div class="sidebar-footer-gift">
+      🎁
+    </div>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-content">
+    <!-- HEADER SUPERIOR -->
+    <header class="top-header">
+      <div class="header-title">SISTEMA MÉDICO VITALIA</div>
+      @if (modo() !== 'menu' && modo() !== 'login' && modo() !== 'registrar') {
+        <div class="user-menu-container">
+          <div class="user-badge" (click)="toggleMenuUsuario()">
+            <span class="user-name">{{ paciente().nombre }}</span>
+            <span class="dropdown-arrow">▼</span>
+          </div>
+          @if (menuUsuarioAbierto()) {
+            <div class="dropdown-card">
+              <div class="dropdown-item" (click)="cambiarModo('editar-perfil')">✏️ Editar datos personales</div>
+              <div class="dropdown-item text-danger" (click)="cambiarModo('confirmar-borrar')">🗑️ Borrar cuenta</div>
+              <div class="dropdown-item" (click)="cerrarSesion()">🚪 Cerrar sesión</div>
+            </div>
+          }
+        </div>
+      }
+    </header>
+
+    <!-- ALERTAS -->
+    @if (mensaje()) {
+      <div class="alert" [ngClass]="{'error': error(), 'success': !error()}">
+        {{ mensaje() }}
+      </div>
+    }
+
+    <div class="content-body">
+      <!-- 1. PÁGINA PRINCIPAL -->
+      @if (modo() === 'menu') {
+        <div class="card-welcome">
+          <h2>Centro Médico Vitalia</h2>
+          <p>Seleccione una opción para continuar:</p>
+          <div class="button-group-row">
+            <button class="btn primary" (click)="cambiarModo('login')">Iniciar Sesión</button>
+            <button class="btn secondary" (click)="cambiarModo('registrar')">Registrarse</button>
+          </div>
+        </div>
+      }
+
+      <!-- 2. INICIAR SESIÓN -->
+      @if (modo() === 'login') {
+        <div class="card-form">
+          <h2>Iniciar Sesión</h2>
+          <div class="form-group">
+            <label>Cédula:</label>
+            <input type="text" [(ngModel)]="credencialesLogin().cedula" name="cedulaLogin" placeholder="Ingrese su cédula" />
+          </div>
+          <div class="form-group">
+            <label>Contraseña:</label>
+            <input type="password" [(ngModel)]="credencialesLogin().password" name="passwordLogin" placeholder="Ingrese su contraseña" />
+          </div>
+          <div class="button-group">
+            <button class="btn primary" (click)="iniciarSesion()">Ingresar</button>
+            <button class="btn light" (click)="cambiarModo('menu')">Volver</button>
+          </div>
+        </div>
+      }
+
+      <!-- 3. REGISTRARSE -->
+      @if (modo() === 'registrar') {
+        <div class="card-form">
+          <h2>Registro de Nuevo Paciente</h2>
+          <div class="form-group"><label>Cédula:</label><input type="text" [(ngModel)]="paciente().cedula" name="cedula" /></div>
+          <div class="form-group"><label>Contraseña:</label><input type="password" [(ngModel)]="paciente().password" name="password" /></div>
+          <div class="form-group"><label>Nombre:</label><input type="text" [(ngModel)]="paciente().nombre" name="nombre" /></div>
+          <div class="form-group"><label>Apellido:</label><input type="text" [(ngModel)]="paciente().apellido" name="apellido" /></div>
+          <div class="form-group"><label>Teléfono:</label><input type="text" [(ngModel)]="paciente().telefono" name="telefono" /></div>
+          <div class="form-group"><label>Correo:</label><input type="email" [(ngModel)]="paciente().correo" name="correo" /></div>
+          <div class="form-group"><label>Dirección:</label><input type="text" [(ngModel)]="paciente().direccion" name="direccion" /></div>
+          <div class="button-group">
+            <button class="btn success" (click)="guardarRegistro()">Registrarse</button>
+            <button class="btn light" (click)="cambiarModo('menu')">Volver</button>
+          </div>
+        </div>
+      }
+
+      <!-- 4. DASHBOARD -->
+      @if (modo() === 'dashboard') {
+        <div class="card-dashboard">
+          <div class="welcome-banner">
+            ⭐ Bienvenido: {{ paciente().nombre }}
+          </div>
+          <div class="stats-row">
+            <div class="stat-box" (click)="cambiarModo('agendar')">
+              <h3>📅 Agendar Cita</h3>
+              <p>Reserve un turno médico</p>
+            </div>
+            <div class="stat-box" (click)="cargarCitas()">
+              <h3>📋 Mis Citas</h3>
+              <p>Consulte sus reservas</p>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- 5. EDITAR PERFIL -->
+      @if (modo() === 'editar-perfil') {
+        <div class="card-form">
+          <h2>Editar Datos Personales</h2>
+          <div class="form-group">
+            <label>Cédula (No modificable):</label>
+            <input type="text" [value]="paciente().cedula" disabled style="background:#e2e8f0;" />
+          </div>
+          <div class="form-group"><label>Contraseña:</label><input type="password" [(ngModel)]="paciente().password" name="password" /></div>
+          <div class="form-group"><label>Nombre:</label><input type="text" [(ngModel)]="paciente().nombre" name="nombre" /></div>
+          <div class="form-group"><label>Apellido:</label><input type="text" [(ngModel)]="paciente().apellido" name="apellido" /></div>
+          <div class="form-group"><label>Teléfono:</label><input type="text" [(ngModel)]="paciente().telefono" name="telefono" /></div>
+          <div class="form-group"><label>Correo:</label><input type="email" [(ngModel)]="paciente().correo" name="correo" /></div>
+          <div class="form-group"><label>Dirección:</label><input type="text" [(ngModel)]="paciente().direccion" name="direccion" /></div>
+          <div class="button-group">
+            <button class="btn success" (click)="actualizarDatos()">Guardar Cambios</button>
+            <button class="btn light" (click)="cambiarModo('dashboard')">Regresar</button>
+          </div>
+        </div>
+      }
+
+      <!-- 6. CONFIRMAR BORRAR CUENTA -->
+      @if (modo() === 'confirmar-borrar') {
+        <div class="card-form text-center">
+          <h2>¿Deseas borrar la cuenta?</h2>
+          <p style="color: #dc2626; margin: 20px 0;">Recuerda que una vez eliminada no podrás iniciar sesión.</p>
+          <div class="button-group">
+            <button class="btn danger" (click)="ejecutarBorrarCuenta()">Aceptar</button>
+            <button class="btn light" (click)="cambiarModo('dashboard')">Cancelar</button>
+          </div>
+        </div>
+      }
+
+      <!-- 7. AGENDAR CITA -->
+      @if (modo() === 'agendar') {
+        <div class="card-form">
+          <h2>Agendar Cita Médica</h2>
+          <div class="form-group">
+            <label>Especialidad:</label>
+            <select [(ngModel)]="nuevaCita().especialidad" name="especialidad" class="select-control">
+              <option value="Medicina General">Medicina General</option>
+              <option value="Pediatría">Pediatría</option>
+              <option value="Cardiología">Cardiología</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Médico Tratante:</label>
+            <select [(ngModel)]="nuevaCita().medico" name="medico" class="select-control" (change)="actualizarDisponibilidad()">
+              <option value="Dr. Carlos Mendoza">Dr. Carlos Mendoza (Medicina General)</option>
+              <option value="Dra. Ana Torres">Dra. Ana Torres (Pediatría)</option>
+              <option value="Dr. Luis Zambrano">Dr. Luis Zambrano (Cardiología)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Fecha de la Cita:</label>
+            <input type="date" [(ngModel)]="nuevaCita().fecha" name="fecha" (change)="actualizarDisponibilidad()" />
+            @if (rangoHorarioMedico()) {
+              <small style="color: #0284c7; display: block; margin-top: 5px;">ℹ️ Turno: <strong>{{ rangoHorarioMedico() }}</strong></small>
+            }
+          </div>
+          <div class="form-group">
+            <label>Hora:</label>
+            <input type="time" [(ngModel)]="nuevaCita().hora" name="hora" />
+            @if (horasOcupadas().length > 0) {
+              <small style="color: #dc2626; display: block; margin-top: 5px;">⚠️ Ocupadas: {{ horasOcupadas().join(', ') }}</small>
+            }
+          </div>
+          <div class="form-group"><label>Motivo:</label><input type="text" [(ngModel)]="nuevaCita().motivo" name="motivo" placeholder="Ej. Control" /></div>
+          <div class="button-group">
+            <button class="btn success" (click)="registrarCita()">Confirmar Cita</button>
+            <button class="btn light" (click)="cambiarModo('dashboard')">Regresar</button>
+          </div>
+        </div>
+      }
+
+      <!-- 8. VER CITAS -->
+      @if (modo() === 'ver-citas') {
+        <div class="card-form">
+          <h2>Mis Citas Agendadas</h2>
+          @if (listaCitas().length === 0) {
+            <p>No tienes citas registradas.</p>
+          } @else {
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Especialidad</th>
+                  <th>Médico</th>
+                  <th>Fecha</th>
+                  <th>Hora</th>
+                  <th>Motivo</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (cita of listaCitas(); track cita.fecha) {
+                  <tr>
+                    <td>{{ cita.especialidad }}</td>
+                    <td>{{ cita.medico }}</td>
+                    <td>{{ cita.fecha }}</td>
+                    <td>{{ cita.hora }}</td>
+                    <td>{{ cita.motivo }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+          <div class="button-group" style="margin-top: 20px;">
+            <button class="btn light" (click)="cambiarModo('dashboard')">Regresar</button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="main-footer">
+      <span>2026 © Centro Médico Vitalia</span>
+      <span>Plataforma Médica</span>
+    </footer>
+  </main>
+</div>
