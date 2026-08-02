@@ -42,6 +42,12 @@ export class App {
   horasOcupadas = signal<string[]>([]);
   
   listaCitas = signal<any[]>([]);
+  dashboard = signal({
+  total_medicos: 18,
+  total_especialidades: 6,
+  total_citas: 0,
+  estado_cuenta: 'Activa'
+});
   medicos = [
   // Medicina General
   { nombre: 'Dr. Carlos Mendoza', especialidad: 'Medicina General' },
