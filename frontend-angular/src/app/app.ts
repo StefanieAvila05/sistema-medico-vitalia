@@ -64,6 +64,33 @@ actualizarSaludo() {
     this.saludo.set('🌙 Buenas noches');
   }
 }
+obtenerIconoEspecialidad(especialidad: string): string {
+
+  switch (especialidad) {
+
+    case 'Medicina General':
+      return '🩺';
+
+    case 'Pediatría':
+      return '👶';
+
+    case 'Cardiología':
+      return '❤️';
+
+    case 'Dermatología':
+      return '🧴';
+
+    case 'Ginecología':
+      return '🤰';
+
+    case 'Traumatología':
+      return '🦴';
+
+    default:
+      return '📅';
+  }
+
+}
   medicos = [
   // Medicina General
   { nombre: 'Dr. Carlos Mendoza', especialidad: 'Medicina General' },

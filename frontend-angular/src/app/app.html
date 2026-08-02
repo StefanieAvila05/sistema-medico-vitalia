@@ -116,16 +116,28 @@
           </div>
           
           <div class="proxima-cita" *ngIf="proximaCita()">
-          <h3>📅 Próxima Cita</h3>
 
-          <p><strong>Especialidad:</strong> {{ proximaCita()?.especialidad }}</p>
+    <div class="proxima-info">
 
-          <p><strong>Médico:</strong> {{ proximaCita()?.medico }}</p>
+        <h3>📅 Próxima Cita</h3>
 
-          <p><strong>Fecha:</strong> {{ proximaCita()?.fecha }}</p>
+        <p><strong>Especialidad:</strong> {{ proximaCita()?.especialidad }}</p>
 
-          <p><strong>Hora:</strong> {{ proximaCita()?.hora }}</p>
-          </div>
+        <p><strong>Médico:</strong> {{ proximaCita()?.medico }}</p>
+
+        <p><strong>Fecha:</strong> {{ proximaCita()?.fecha }}</p>
+
+        <p><strong>Hora:</strong> {{ proximaCita()?.hora }}</p>
+
+    </div>
+
+    <div class="proxima-icono">
+
+        {{ obtenerIconoEspecialidad(proximaCita()?.especialidad) }}
+
+    </div>
+
+</div>
         </div>
 
         <div class="stats-row">
