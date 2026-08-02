@@ -156,7 +156,11 @@
           <h2>Agendar Cita Médica</h2>
           <div class="form-group">
             <label>Especialidad:</label>
-            <select [(ngModel)]="nuevaCita().especialidad" name="especialidad" class="select-control">
+            <select
+              [(ngModel)]="nuevaCita().especialidad"
+              name="especialidad"
+              class="select-control"
+              (change)="filtrarMedicos()">
               <option value="Medicina General">Medicina General</option>
               <option value="Pediatría">Pediatría</option>
               <option value="Cardiología">Cardiología</option>
@@ -164,11 +168,17 @@
           </div>
           <div class="form-group">
             <label>Médico Tratante:</label>
-            <select [(ngModel)]="nuevaCita().medico" name="medico" class="select-control" (change)="actualizarDisponibilidad()">
-              <option value="Dr. Carlos Mendoza">Dr. Carlos Mendoza (Medicina General)</option>
-              <option value="Dra. Ana Torres">Dra. Ana Torres (Pediatría)</option>
-              <option value="Dr. Luis Zambrano">Dr. Luis Zambrano (Cardiología)</option>
-            </select>
+            <select
+            [(ngModel)]="nuevaCita().medico"
+            name="medico"
+            class="select-control"
+            (change)="actualizarDisponibilidad()">
+
+            @for (medico of obtenerMedicosFiltrados(); track medico.nombre) {
+                <option [value]="medico.nombre">
+                    {{ medico.nombre }} ({{ medico.especialidad }})
+                </option>
+            } </select>
           </div>
           <div class="form-group">
             <label>Fecha de la Cita:</label>

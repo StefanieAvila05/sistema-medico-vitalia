@@ -40,7 +40,13 @@ export class App {
 
   rangoHorarioMedico = signal<string>('');
   horasOcupadas = signal<string[]>([]);
+  
   listaCitas = signal<any[]>([]);
+  medicos = [
+  { nombre: 'Dr. Carlos Mendoza', especialidad: 'Medicina General'},
+  { nombre: 'Dra. Ana Torres', especialidad: 'Pediatría'},
+  { nombre: 'Dr. Luis Zambrano', especialidad: 'Cardiología'}
+];
   mensaje = signal<string>('');
   error = signal<boolean>(false);
 
@@ -50,7 +56,7 @@ export class App {
     this.error.set(false);
     this.menuUsuarioAbierto.set(false);
     if (nuevoModo === 'agendar') {
-      this.actualizarDisponibilidad();
+    this.filtrarMedicos();
     }
   }
 
@@ -193,4 +199,20 @@ export class App {
       }
     });
   }
+obtenerMedicosFiltrados() {
+  return this.medicos.filter(
+    m => m.especialidad === this.nuevaCita().especialidad
+  );
+}
+
+filtrarMedicos() {
+  const medicos = this.obtenerMedicosFiltrados();
+
+  this.nuevaCita.update(cita => ({
+    ...cita,
+    medico: medicos.length > 0 ? medicos[0].nombre : ''
+  }));
+
+  this.actualizarDisponibilidad();
+}
 }
