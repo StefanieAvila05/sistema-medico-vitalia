@@ -43,9 +43,35 @@ export class App {
   
   listaCitas = signal<any[]>([]);
   medicos = [
-  { nombre: 'Dr. Carlos Mendoza', especialidad: 'Medicina General'},
-  { nombre: 'Dra. Ana Torres', especialidad: 'Pediatría'},
-  { nombre: 'Dr. Luis Zambrano', especialidad: 'Cardiología'}
+  // Medicina General
+  { nombre: 'Dr. Carlos Mendoza', especialidad: 'Medicina General' },
+  { nombre: 'Dra. Andrea León', especialidad: 'Medicina General' },
+  { nombre: 'Dr. Miguel Herrera', especialidad: 'Medicina General' },
+
+  // Pediatría
+  { nombre: 'Dra. Ana Torres', especialidad: 'Pediatría' },
+  { nombre: 'Dr. José Ramírez', especialidad: 'Pediatría' },
+  { nombre: 'Dra. Sofía Castillo', especialidad: 'Pediatría' },
+
+  // Cardiología
+  { nombre: 'Dr. Luis Zambrano', especialidad: 'Cardiología' },
+  { nombre: 'Dra. Valeria Paredes', especialidad: 'Cardiología' },
+  { nombre: 'Dr. Daniel Mora', especialidad: 'Cardiología' },
+
+  // Dermatología
+  { nombre: 'Dra. Camila Espinoza', especialidad: 'Dermatología' },
+  { nombre: 'Dr. Ricardo Vélez', especialidad: 'Dermatología' },
+  { nombre: 'Dra. Paola Salinas', especialidad: 'Dermatología' },
+
+  // Ginecología
+  { nombre: 'Dra. María Fernández', especialidad: 'Ginecología' },
+  { nombre: 'Dra. Isabel Guerrero', especialidad: 'Ginecología' },
+  { nombre: 'Dr. Andrés Molina', especialidad: 'Ginecología' },
+
+  // Traumatología
+  { nombre: 'Dr. Jorge Cedeño', especialidad: 'Traumatología' },
+  { nombre: 'Dr. Esteban Ruiz', especialidad: 'Traumatología' },
+  { nombre: 'Dra. Karen López', especialidad: 'Traumatología' }
 ];
   mensaje = signal<string>('');
   error = signal<boolean>(false);
@@ -203,6 +229,10 @@ obtenerMedicosFiltrados() {
   return this.medicos.filter(
     m => m.especialidad === this.nuevaCita().especialidad
   );
+}
+
+obtenerEspecialidades() {
+  return [...new Set(this.medicos.map(m => m.especialidad))];
 }
 
 filtrarMedicos() {
