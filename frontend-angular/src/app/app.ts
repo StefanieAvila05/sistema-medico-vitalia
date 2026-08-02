@@ -50,6 +50,7 @@ export class App {
   total_citas: 0,
   estado_cuenta: 'Activa'
 });
+proximaCita = signal<any>(null);
 saludo = signal('');
 
 actualizarSaludo() {
@@ -122,6 +123,7 @@ actualizarSaludo() {
     this.clinicaService.login(creds).subscribe({
       next: (res: any) => {
         this.paciente.set(res);
+        this.cargarDashboard();
         this.modo.set('dashboard');
         this.mensaje.set('');
         this.error.set(false);
@@ -246,6 +248,25 @@ actualizarSaludo() {
       }
     });
   }
+
+  cargarDashboard() {
+  this.clinicaService.obtenerDashboard(this.paciente().cedula).subscribe({
+    next: (res) => {
+      this.dashboard.set({
+        total_medicos: res.total_medicos,
+        total_especialidades: res.total_especialidades,
+        total_citas: res.total_citas,
+        estado_cuenta: res.estado_cuenta
+      });
+
+      this.proximaCita.set(res.proxima_cita);
+    },
+    error: () => {
+      console.error('No se pudo cargar el dashboard');
+    }
+  });
+  }
+
 obtenerMedicosFiltrados() {
   return this.medicos.filter(
     m => m.especialidad === this.nuevaCita().especialidad

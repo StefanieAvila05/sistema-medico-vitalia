@@ -114,6 +114,18 @@
               <p>Consulte sus reservas</p>
             </div>
           </div>
+          
+          <div class="proxima-cita" *ngIf="proximaCita()">
+          <h3>📅 Próxima Cita</h3>
+
+          <p><strong>Especialidad:</strong> {{ proximaCita()?.especialidad }}</p>
+
+          <p><strong>Médico:</strong> {{ proximaCita()?.medico }}</p>
+
+          <p><strong>Fecha:</strong> {{ proximaCita()?.fecha }}</p>
+
+          <p><strong>Hora:</strong> {{ proximaCita()?.hora }}</p>
+          </div>
         </div>
 
         <div class="stats-row">
