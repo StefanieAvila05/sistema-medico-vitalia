@@ -12,6 +12,8 @@ import { ClinicaService } from './services/clinica';
 })
 export class App {
   private clinicaService = inject(ClinicaService);
+  constructor() {
+  this.actualizarSaludo();}
 
   // Modos de navegación: 'menu', 'login', 'registrar', 'dashboard', 'agendar', 'ver-citas', 'editar-perfil', 'confirmar-borrar'
   modo = signal<'menu' | 'login' | 'registrar' | 'dashboard' | 'agendar' | 'ver-citas' | 'editar-perfil' | 'confirmar-borrar'>('menu');
@@ -48,6 +50,19 @@ export class App {
   total_citas: 0,
   estado_cuenta: 'Activa'
 });
+saludo = signal('');
+
+actualizarSaludo() {
+  const hora = new Date().getHours();
+
+  if (hora < 12) {
+    this.saludo.set('🌞 Buenos días');
+  } else if (hora < 18) {
+    this.saludo.set('🌤️ Buenas tardes');
+  } else {
+    this.saludo.set('🌙 Buenas noches');
+  }
+}
   medicos = [
   // Medicina General
   { nombre: 'Dr. Carlos Mendoza', especialidad: 'Medicina General' },
