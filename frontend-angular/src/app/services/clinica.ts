@@ -40,4 +40,7 @@ export class ClinicaService {
   obtenerDisponibilidad(medico: string, fecha: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/medicos/disponibilidad?medico=${encodeURIComponent(medico)}&fecha=${fecha}`);
   }
+  obtenerDashboard(cedula: string): Observable<any> {
+  return this.http.get(`${this.apiUrl}/dashboard/${cedula}`);
+  }
 }
